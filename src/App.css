@@ -1,5 +1,22 @@
 .App {
   text-align: center;
+  font-family: arial;
+}
+
+.navigationMenu ul li {
+  display:inline;
+  color: white;
+  padding:10px;
+  margin:5px;
+  background-color:black;
+  border:4px bold whitesmoke;
+  border-radius:5px;
+  text-decoration: none;
+  float: left;
+}
+.navigationMenu ul li a{
+  color: white;
+  text-decoration: none;
 }
 
 .App-logo {
