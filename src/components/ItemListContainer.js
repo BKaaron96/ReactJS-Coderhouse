@@ -1,4 +1,4 @@
-function ItemListContainer(props){
+function ItemListContainer(greetings){
     console.log(greetings);
     return(
         <div className="container">
