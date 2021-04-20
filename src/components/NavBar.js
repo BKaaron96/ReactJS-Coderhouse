@@ -10,10 +10,10 @@ function Navbar(){
         <a href="#" target="_blank">Home</a>
       </li>
       <li>
-        <a href="#" target="_blank">Products</a>
+        <a href="#" target="_blank">Productos</a>
       </li>
       <li>
-        <a href="#" target="_blank">Blog</a>
+        <a href="#" target="_blank">Categorías</a>
       </li>
       <li>
         <a href="#" target="_blank">Contacto</a>
