@@ -1,47 +1,66 @@
 import React, { useEffect, useState } from 'react';
 import Item from './Item.js';
 import Loading from './Loading.js'
+import { getFirestore } from "../../firebase";
 
-const catalog = [
-{id:'1', name: '1', brand: '1', price: 50, initial: 2, min: 2, max: 10},
-{id:'2', name: '2', brand: '2', price: 100, initial: 1, min: 1, max: 10},
-{id:'3', name: '3', brand: '3', price: 20, initial: 4, min: 4, max: 8}
-];
 
-const ItemList = function(){
+const ItemList = ({ onAdd }) => {
 	const [products, setProducts] = useState([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
+  
 	useEffect(() => {
-		const task =  new Promise((resolve, reject) => {
-			setTimeout(() => {
-				resolve(catalog);
-			}, 2000)});
-
-	task.then(
-		res => {
-			setProducts(res);
-			setLoading(false)
-		},
-		err => {console.log(err)},
-		);
-
+	  setLoading(true);
+	  const db = getFirestore();
+	  const itemCollection = db.collection("items");
+  
+	  itemCollection
+		.get()
+		.then((querySnapshot) => {
+		  if (querySnapshot.size === 0) {
+			console.log("No results!");
+		  }
+		  setProducts(
+			querySnapshot.docs.map((doc) => {
+			  return { id: doc.id, ...doc.data() };
+			})
+		  );
+		})
+		.catch((error) => {
+		  console.log("Error searching items", error);
+		})
+		.finally(() => {
+		  setLoading(false);
+		});
+	  // eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-				return <> 
-				{loading && <Loading />}
-				<div className='row'>
-					{products.map(product => 
-								<Item 
-								id={product.id}
-								name={product.name}
-								brand={product.brand}
-								price={product.price}
-								initial={product.initial}
-								min={product.min}
-								max={product.max}
-								/>)};
-				</div>
-				</>
-}
+  
+	return (
+	  <div className="list-container" id="list-container">
+		{loading ? (
+		  <Loading text="Cargando productos..." />
+		) : (
+		  <div className="list-container__details">
+			<div className="list-container__details-categories">
+			  <h2>Categorías</h2>
+			</div>
+			<div className="list-container__details-title">
+			  <h3>Productos</h3>
+			</div>
+			<div className="list-container__list">
+			  {products.map((product) => {
+				return (
+				  <ItemDetailContainer
+					key={product.id}
+					product={product}
+					onAdd={onAdd}
+				  />
+				);
+			  })}
+			</div>
+		  </div>
+		)}
+	  </div>
+	);
+  };
 
 export default ItemList; 
